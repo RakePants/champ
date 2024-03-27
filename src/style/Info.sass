@@ -1,0 +1,38 @@
+@import './Variables.sass'
+.info
+    width: 100%
+    margin-top: 20px
+    display: flex
+    img
+        width: 100%
+        height: auto
+        border-radius: 30px
+    &__container
+        width: 100%
+        height: 100%
+        min-height: 200px
+        max-height: 500px
+        padding: 30px
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+    &__title
+        color: $font
+        font-size: 24px
+        font-weight: 600
+    &__item
+        font-size: 20px
+        color: $font
+        span
+            color: $primary
+    .MuiPaper-root
+        background-color: transparent
+        border: 2px solid $primary
+        padding: 10px
+        color: $font
+        border-radius: 10px
+@media screen and (max-width: 900px)
+    .info
+        &__container
+            text-align: center
+            align-items: center

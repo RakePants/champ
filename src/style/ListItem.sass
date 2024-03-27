@@ -1,0 +1,19 @@
+@import './Variables.sass'
+.list__item
+    list-style-type: none
+    width: 100%
+    cursor: pointer
+    color: $listitem-color
+    padding: 8px
+    display: flex
+    align-items: center
+    &__text
+        margin-left: 15px
+        font-size: 25px
+        font-weight: 500
+    &:hover
+        color: $primary
+        background-color: $tertiary
+    &_active
+        color: $primary
+        background-color: $tertiary
