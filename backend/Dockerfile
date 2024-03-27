@@ -3,9 +3,9 @@ FROM python:3.11.7-slim
 RUN addgroup --gid 10001 champ_user && \
     adduser --uid 10001 --gid 10001 --disabled-password --gecos "" champ_user
 
-WORKDIR /usr/src/vaults_service
+WORKDIR /usr/src/backend
 
-ENV PYTHONPATH=/usr/src/vaults_service/src
+ENV PYTHONPATH=/usr/src/backend/src
 
 COPY /requirements/base.txt /requirements/
 
