@@ -42,3 +42,9 @@ class TicketRepository(AbstractRepository):
         async with self.session as session:
             document = await session.get(models.Ticket, id)
             return document
+
+    async def delete(self, id: UUID):
+        async with self.session as session:
+            async with session.begin():
+                ticket = await session.get(models.Ticket, id)
+                await session.delete(ticket)

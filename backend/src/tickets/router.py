@@ -8,36 +8,33 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 
 from src.database.repositories import TicketRepository
+from src.tickets.schemas import CreateTicketRequest, TicketResponse
+from src.tickets.utils import add_ticket
+from src.tickets.dependencies import ticket_exists
 
 tickets_router = APIRouter(tags=["Tickets"])
 
-"""
+
 @tickets_router.post(
     "/create_ticket", status_code=status.HTTP_201_CREATED, response_model=TicketResponse
 )
 async def create_ticket(
     create_ticket_request: CreateTicketRequest = Body(...),
+    image: UploadFile = File(...),
 ):
-    ticket = await add_ticket(create_ticket_request, TicketRepository())
+    ticket = await add_ticket(create_ticket_request, image, TicketRepository())
 
-    # Return the created vault representation
     return TicketResponse.model_validate(ticket)
-"""
 
-"""
-@vaults_router.delete("/delete_vault", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_vault(
-    vault_id: UUID = Body(...),
-    vault_repository: VaultRepository = Depends(vault_exists),
+
+@tickets_router.delete("/delete_ticket", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_ticket(
+    ticket_id: UUID = Body(...),
+    ticket_repository: TicketRepository = Depends(ticket_exists),
 ):  
-    vault_type = await vault_repository.get_vault_type(vault_id)
-    await vault_repository.delete(vault_id)
-    if vault_type == VaultType.GRAPH:
-        await send_delete_request_to_graph_kb_service(body=jsonable_encoder(vault_id))
-    else:
-        await send_delete_request_to_vector_kb_service(body=jsonable_encoder(vault_id))
+    await ticket_repository.delete(ticket_id)
 
-
+"""
 @vaults_router.post(
     "/get_vault_documents",
     status_code=status.HTTP_200_OK,

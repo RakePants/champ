@@ -1,44 +1,34 @@
+import base64
 import uuid
 
 from fastapi import UploadFile
 
-from src.vaults.schemas import CreateVaultRequest
-from src.repositories.models import Document, Vault
-from src.repositories.postgres_repository import DocumentRepository, VaultRepository
-from src.utils.readers import read_document
+from src.database.models import Ticket
+from src.database.repositories import TicketRepository
+from src.tickets.schemas import CreateTicketRequest, TicketStatus
 
 
-async def add_vault(
-    create_vault_request: CreateVaultRequest, vault_repository: VaultRepository
-) -> Vault:
+async def add_ticket(
+    create_ticket_request: CreateTicketRequest,
+    image: UploadFile,
+    ticket_repository: TicketRepository,
+) -> Ticket:
     id = uuid.uuid4()  # Generate random unique identifier
 
-    vault = Vault(
+    ticket = Ticket(
         id=id,
-        name=create_vault_request.vault_name,
-        type=create_vault_request.vault_type,
-        user_id=create_vault_request.user_id,
+        latitude=create_ticket_request.latitude,
+        longitude=create_ticket_request.longitude,
+        address=create_ticket_request.address,
+        description=create_ticket_request.description,
+        type=create_ticket_request.type,
+        volume=create_ticket_request.volume,
+        status=TicketStatus.NEW,
+        image=base64.b64encode(image.file.read()).decode("ascii"),
+        completion_image=None,
+        completion_timestamp=None,
     )
 
-    await vault_repository.add(vault)
+    await ticket_repository.add(ticket)
 
-    return vault
-
-
-async def add_document(
-    file: UploadFile, vault_id: uuid, document_repository: DocumentRepository
-) -> Document:
-    id = uuid.uuid4()  # Generate random unique identifier
-
-    text = await read_document(file)
-
-    document = Document(
-        id=id,
-        name=file.filename,
-        text=text,
-        vault_id=vault_id,
-    )
-
-    await document_repository.add(document)
-
-    return document
+    return ticket

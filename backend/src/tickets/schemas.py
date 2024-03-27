@@ -7,15 +7,19 @@ from uuid import UUID
 from pydantic import BaseModel, model_validator
 
 
-class VaultType(str, Enum):
-    GRAPH = "graph"
-    VECTOR = "vector"
+class TicketStatus(str, Enum):
+    NEW = "new"
+    DECLINED = "declined"
+    ACCEPTED = "accepted"
+    COMPLETED = "completed"
 
-
-class CreateVaultRequest(BaseModel):
-    user_id: UUID
-    vault_name: str
-    vault_type: VaultType
+class CreateTicketRequest(BaseModel):
+    latitude: float
+    longitude: float
+    address: str
+    description: str
+    type: str
+    volume: int
 
     @model_validator(mode="before")
     @classmethod
@@ -35,22 +39,9 @@ class RequestToGraphKBService(BaseModel):
     documents: List[Document]
 
 
-class VaultResponse(BaseModel):
+class TicketResponse(BaseModel):
     id: UUID
-    name: str
-    type: VaultType
-    created_at: datetime
-    user_id: UUID
-
-    class Config:
-        from_attributes = True
-
-
-class DocumentResponse(BaseModel):
-    id: UUID
-    name: str
-    text: str
-    vault_id: UUID
+    timestamp: datetime
 
     class Config:
         from_attributes = True

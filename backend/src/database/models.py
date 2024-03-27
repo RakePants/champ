@@ -23,4 +23,11 @@ class Ticket(Base):
     timestamp: Mapped[DateTime] = Column(DateTime, default=datetime.datetime.now)
     type: Mapped[str] = Column(String(255))
     volume: Mapped[int] = Column(Integer)
+    status: Mapped[str] = Column(String(64))
     image: Mapped[str] = Column(Text)  # Base64 image data
+    completion_image: Mapped[str | None] = Column(
+        Text, nullable=True
+    )  # Base64 image data
+    completion_timestamp: Mapped[DateTime | None] = Column(
+        DateTime, default=datetime.datetime.now, nullable=True
+    )
