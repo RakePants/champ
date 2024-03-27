@@ -1,0 +1,1 @@
+from src.database.models import Base, Ticket

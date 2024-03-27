@@ -1,8 +1,9 @@
+import datetime
 import uuid
 
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -18,5 +19,8 @@ class Ticket(Base):
     latitude: Mapped[float] = Column(Float)
     longitude: Mapped[float] = Column(Float)
     address: Mapped[str] = Column(String(255))
+    description: Mapped[str] = Column(String(255))
+    timestamp: Mapped[DateTime] = Column(DateTime, default=datetime.datetime.now)
     type: Mapped[str] = Column(String(255))
     volume: Mapped[int] = Column(Integer)
+    image: Mapped[str] = Column(Text)  # Base64 image data
