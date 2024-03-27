@@ -48,36 +48,54 @@ async def delete_ticket(
 )
 async def get_tickets():
     ticket_repository = TicketRepository()
-
     tickets = await ticket_repository.get_all()
-    print(type(tickets[0]))
+
     return [TicketResponse.model_validate(ticket) for ticket in tickets]
 
 
-"""
-@vaults_router.post(
-    "/get_vault_documents",
+@tickets_router.get(
+    "/get_new_tickets",
     status_code=status.HTTP_200_OK,
-    response_model=List[DocumentResponse],
+    response_model=List[TicketResponse],
 )
-async def get_vault_documents(
-    vault_id: UUID = Body(...),
-    vault_repository: VaultRepository = Depends(vault_exists),
-):
-    documents = await vault_repository.get_vault_documents(vault_id)
+async def get_new_tickets():
+    ticket_repository = TicketRepository()
+    tickets = await ticket_repository.get_new()
 
-    return [DocumentResponse.model_validate(document) for document in documents]
+    return [TicketResponse.model_validate(ticket) for ticket in tickets]
 
 
-@vaults_router.post(
-    "/get_users_vaults",
+@tickets_router.get(
+    "/get_accepted_tickets",
     status_code=status.HTTP_200_OK,
-    response_model=List[VaultResponse],
+    response_model=List[TicketResponse],
 )
-async def get_users_vaults(user_id: UUID = Body(...)):
-    vault_repository = VaultRepository()
+async def get_accepted_tickets():
+    ticket_repository = TicketRepository()
+    tickets = await ticket_repository.get_accepted()
 
-    vaults = await vault_repository.get_users_vaults(user_id)
+    return [TicketResponse.model_validate(ticket) for ticket in tickets]
 
-    return [VaultResponse.model_validate(vault) for vault in vaults]
-"""
+
+@tickets_router.get(
+    "/get_declined_tickets",
+    status_code=status.HTTP_200_OK,
+    response_model=List[TicketResponse],
+)
+async def get_declined_tickets():
+    ticket_repository = TicketRepository()
+    tickets = await ticket_repository.get_declined()
+
+    return [TicketResponse.model_validate(ticket) for ticket in tickets]
+
+
+@tickets_router.get(
+    "/get_completed_tickets",
+    status_code=status.HTTP_200_OK,
+    response_model=List[TicketResponse],
+)
+async def get_completed_tickets():
+    ticket_repository = TicketRepository()
+    tickets = await ticket_repository.get_completed()
+
+    return [TicketResponse.model_validate(ticket) for ticket in tickets]

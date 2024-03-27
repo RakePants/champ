@@ -48,7 +48,30 @@ class TicketRepository(AbstractRepository):
             query = select(models.Ticket)
             result = await session.execute(query)
             return result.scalars().all()
-            
+
+    async def get_new(self) -> List[models.Ticket] | None:
+        async with self.session as session:
+            query = select(models.Ticket).where(models.Ticket.status == "new")
+            result = await session.execute(query)
+            return result.scalars().all()
+    
+    async def get_accepted(self) -> List[models.Ticket] | None:
+        async with self.session as session:
+            query = select(models.Ticket).where(models.Ticket.status == "accepted")
+            result = await session.execute(query)
+            return result.scalars().all()
+    
+    async def get_declined(self) -> List[models.Ticket] | None:
+        async with self.session as session:
+            query = select(models.Ticket).where(models.Ticket.status == "declined")
+            result = await session.execute(query)
+            return result.scalars().all()
+
+    async def get_completed(self) -> List[models.Ticket] | None:
+        async with self.session as session:
+            query = select(models.Ticket).where(models.Ticket.status == "completed")
+            result = await session.execute(query)
+            return result.scalars().all()
 
     async def delete(self, id: UUID):
         async with self.session as session:
