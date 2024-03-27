@@ -6,7 +6,7 @@ from fastapi.exceptions import HTTPException
 from src.database.repositories import TicketRepository
 
 
-async def ticket_exists(ticket_id: UUID = Body(...)) -> TicketRepository:
+async def ticket_exists(ticket_id: UUID) -> TicketRepository:
     ticket_repository = TicketRepository()
 
     ticket = await ticket_repository.get(ticket_id)

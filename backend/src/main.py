@@ -10,4 +10,4 @@ async def root():
     return {"message": "Hello world!"}
 
 
-app.include_router(tickets_router)
+app.include_router(tickets_router, prefix="/tickets")

@@ -1,6 +1,6 @@
 import base64
 import uuid
-
+import datetime
 from fastapi import UploadFile
 
 from src.database.models import Ticket
@@ -30,5 +30,18 @@ async def add_ticket(
     )
 
     await ticket_repository.add(ticket)
+
+    return ticket
+
+
+async def complete_ticket(
+    id: uuid.UUID,
+    image: UploadFile,
+    ticket_repository: TicketRepository,
+) -> Ticket:
+
+    ticket = await ticket_repository.complete(
+        id, base64.b64encode(image.file.read()).decode("ascii"), datetime.datetime.now()
+    )
 
     return ticket

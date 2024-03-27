@@ -1,3 +1,4 @@
+import datetime
 from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
@@ -7,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from src.config import settings
 from src.database import models
+from src.tickets.schemas import TicketStatus
 
 engine = create_async_engine(
     settings.database_url,
@@ -54,13 +56,13 @@ class TicketRepository(AbstractRepository):
             query = select(models.Ticket).where(models.Ticket.status == "new")
             result = await session.execute(query)
             return result.scalars().all()
-    
+
     async def get_accepted(self) -> List[models.Ticket] | None:
         async with self.session as session:
             query = select(models.Ticket).where(models.Ticket.status == "accepted")
             result = await session.execute(query)
             return result.scalars().all()
-    
+
     async def get_declined(self) -> List[models.Ticket] | None:
         async with self.session as session:
             query = select(models.Ticket).where(models.Ticket.status == "declined")
@@ -78,3 +80,19 @@ class TicketRepository(AbstractRepository):
             async with session.begin():
                 ticket = await session.get(models.Ticket, id)
                 await session.delete(ticket)
+
+    async def change_status(self, id: UUID, status: TicketStatus):
+        async with self.session as session:
+            async with session.begin():
+                ticket = await session.get(models.Ticket, id)
+                ticket.status = status
+                return ticket
+
+    async def complete(self, id: UUID, image_bytes: str, timestamp: datetime.datetime):
+        async with self.session as session:
+            async with session.begin():
+                ticket = await session.get(models.Ticket, id)
+                ticket.status = TicketStatus.COMPLETED
+                ticket.completion_image = image_bytes
+                ticket.completion_timestamp = timestamp
+                return ticket

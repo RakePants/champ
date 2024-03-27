@@ -13,6 +13,7 @@ class TicketStatus(str, Enum):
     ACCEPTED = "accepted"
     COMPLETED = "completed"
 
+
 class CreateTicketRequest(BaseModel):
     latitude: float
     longitude: float
