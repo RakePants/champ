@@ -1,5 +1,5 @@
-import typing
 from abc import ABC, abstractmethod
+from typing import List
 from uuid import UUID
 
 from sqlalchemy import pool, select
@@ -42,6 +42,13 @@ class TicketRepository(AbstractRepository):
         async with self.session as session:
             document = await session.get(models.Ticket, id)
             return document
+
+    async def get_all(self) -> List[models.Ticket] | None:
+        async with self.session as session:
+            query = select(models.Ticket)
+            result = await session.execute(query)
+            return result.scalars().all()
+            
 
     async def delete(self, id: UUID):
         async with self.session as session:

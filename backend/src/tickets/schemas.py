@@ -29,17 +29,24 @@ class CreateTicketRequest(BaseModel):
         return value
 
 
-class Document(BaseModel):
-    document_id: UUID
-    text: str
-
-
-class RequestToGraphKBService(BaseModel):
-    vault_id: UUID
-    documents: List[Document]
-
-
 class TicketResponse(BaseModel):
+    id: UUID
+    latitude: float
+    longitude: float
+    address: str
+    description: str
+    type: str
+    volume: int
+    status: TicketStatus
+    image: str
+    completion_image: str | None
+    completion_timestamp: datetime | None
+
+    class Config:
+        from_attributes = True
+
+
+class TicketCreationResponse(BaseModel):
     id: UUID
     timestamp: datetime
 

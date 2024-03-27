@@ -29,5 +29,5 @@ class Ticket(Base):
         Text, nullable=True
     )  # Base64 image data
     completion_timestamp: Mapped[DateTime | None] = Column(
-        DateTime, default=datetime.datetime.now, nullable=True
+        DateTime, nullable=True
     )

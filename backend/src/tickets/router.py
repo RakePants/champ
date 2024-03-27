@@ -8,7 +8,11 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import HTTPException
 
 from src.database.repositories import TicketRepository
-from src.tickets.schemas import CreateTicketRequest, TicketResponse
+from src.tickets.schemas import (
+    CreateTicketRequest,
+    TicketResponse,
+    TicketCreationResponse,
+)
 from src.tickets.utils import add_ticket
 from src.tickets.dependencies import ticket_exists
 
@@ -16,7 +20,9 @@ tickets_router = APIRouter(tags=["Tickets"])
 
 
 @tickets_router.post(
-    "/create_ticket", status_code=status.HTTP_201_CREATED, response_model=TicketResponse
+    "/create_ticket",
+    status_code=status.HTTP_201_CREATED,
+    response_model=TicketCreationResponse,
 )
 async def create_ticket(
     create_ticket_request: CreateTicketRequest = Body(...),
@@ -24,15 +30,29 @@ async def create_ticket(
 ):
     ticket = await add_ticket(create_ticket_request, image, TicketRepository())
 
-    return TicketResponse.model_validate(ticket)
+    return TicketCreationResponse.model_validate(ticket)
 
 
 @tickets_router.delete("/delete_ticket", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_ticket(
     ticket_id: UUID = Body(...),
     ticket_repository: TicketRepository = Depends(ticket_exists),
-):  
+):
     await ticket_repository.delete(ticket_id)
+
+
+@tickets_router.get(
+    "/get_tickets",
+    status_code=status.HTTP_200_OK,
+    response_model=List[TicketResponse],
+)
+async def get_tickets():
+    ticket_repository = TicketRepository()
+
+    tickets = await ticket_repository.get_all()
+    print(type(tickets[0]))
+    return [TicketResponse.model_validate(ticket) for ticket in tickets]
+
 
 """
 @vaults_router.post(
