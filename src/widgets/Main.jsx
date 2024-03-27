@@ -3,13 +3,14 @@ import '../style/Main.sass';
 import Info from "../entities/Info";
 import { Container } from "@mui/system";
 
-function Main() {
+function Main({children, title}) {
     return (
         <>
         <div className="main">
             <Container >
-                <div className="main__title">Заказ #2132</div>
+                <div className="main__title">{title}</div>
                 <Info></Info>
+                {children}
             </Container>
         </div>
         </>
