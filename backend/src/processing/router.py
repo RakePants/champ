@@ -1,18 +1,16 @@
-import asyncio
-import logging
-from typing import List
-from uuid import UUID
-
 from fastapi import APIRouter, File, UploadFile, status
+
+from src.processing.utils import process_image, process_speech_to_text
 
 processing_router = APIRouter(tags=["Processing"])
 
 
 @processing_router.post("/image", status_code=status.HTTP_200_OK)
-async def process_image(
+async def image(
     image: UploadFile = File(...),
 ):
     image = image.file
+    image = await process_image(image)
     return image
 
 
@@ -21,5 +19,5 @@ async def speech_to_text(
     audio: UploadFile = File(...),
 ):
     audio = audio.file
-
+    audio = await process_speech_to_text(audio)
     return audio
