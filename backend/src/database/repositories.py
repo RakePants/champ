@@ -81,11 +81,13 @@ class TicketRepository(AbstractRepository):
                 ticket = await session.get(models.Ticket, id)
                 await session.delete(ticket)
 
-    async def change_status(self, id: UUID, status: TicketStatus):
+    async def decline(self, id: UUID):
         async with self.session as session:
             async with session.begin():
                 ticket = await session.get(models.Ticket, id)
-                ticket.status = status
+                ticket.status = TicketStatus.DECLINED
+                ticket.contractor_id = None
+                ticket.completion_target_date = None
                 return ticket
 
     async def complete(self, id: UUID, image_bytes: str, timestamp: datetime.datetime):
@@ -96,3 +98,66 @@ class TicketRepository(AbstractRepository):
                 ticket.completion_image = image_bytes
                 ticket.completion_timestamp = timestamp
                 return ticket
+
+    async def accept(
+        self, id: UUID, contractor_id: str, completion_target_date: datetime.date
+    ):
+        async with self.session as session:
+            async with session.begin():
+                ticket = await session.get(models.Ticket, id)
+                ticket.status = TicketStatus.ACCEPTED
+                ticket.contractor_id = contractor_id
+                ticket.completion_target_date = completion_target_date
+                return ticket
+
+
+class ContractorRepository(AbstractRepository):
+    def __init__(self):
+        self.session = Session()
+
+    async def add(self, entity):
+        async with self.session as session:
+            async with session.begin():
+                session.add(entity)
+
+    async def get(self, id: UUID) -> models.Contractor | None:
+        async with self.session as session:
+            vault = await session.get(models.Contractor, id)
+            return vault
+
+    async def get_all(self) -> List[models.Contractor] | None:
+        async with self.session as session:
+            query = select(models.Contractor)
+            result = await session.execute(query)
+            return result.scalars().all()
+
+    async def get_due_contractor_tickets(self, id: UUID) -> List[models.Ticket] | None:
+        async with self.session as session:
+            tickets = await session.execute(
+                select(models.Ticket).where(models.Ticket.contractor_id == id, models.Ticket.status == TicketStatus.ACCEPTED)
+            )
+            return tickets.scalars().all()
+        
+    async def get_completed_contractor_tickets(self, id: UUID) -> List[models.Ticket] | None:
+        async with self.session as session:
+            tickets = await session.execute(
+                select(models.Ticket).where(models.Ticket.contractor_id == id, models.Ticket.status == TicketStatus.COMPLETED)
+            )
+            return tickets.scalars().all()
+
+    async def delete(self, id: UUID) -> None:
+        async with self.session as session:
+            async with session.begin():
+                entity = await session.get(models.Contractor, id)
+
+                if entity:
+                    # Query and change all tickets associated with the contractor
+                    tickets = await session.execute(
+                        select(models.Ticket).where(models.Ticket.contractor_id == id)
+                    )
+                    for ticket in tickets.scalars().all():
+                        ticket.status = TicketStatus.NEW
+                        ticket.contractor_id = None
+                        ticket.completion_target_date = None
+
+                    await session.delete(entity)

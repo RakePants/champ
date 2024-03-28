@@ -11,11 +11,12 @@ from src.database.repositories import TicketRepository
 from src.tickets.dependencies import ticket_exists
 from src.tickets.schemas import (
     CreateTicketRequest,
+    AcceptTicketRequest,
     TicketCreationResponse,
     TicketResponse,
     TicketStatus,
 )
-from src.tickets.utils import add_ticket, complete_ticket
+from src.tickets.utils import add_ticket, complete_ticket, accept_ticket
 
 tickets_router = APIRouter(tags=["Tickets"])
 
@@ -36,10 +37,10 @@ async def create(
 
 @tickets_router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(
-    ticket_id: UUID,
+    id: UUID,
     ticket_repository: TicketRepository = Depends(ticket_exists),
 ):
-    await ticket_repository.delete(ticket_id)
+    await ticket_repository.delete(id)
 
 
 @tickets_router.get(
@@ -48,11 +49,10 @@ async def delete(
     response_model=TicketResponse,
 )
 async def get_by_id(
-    ticket_id: UUID,
+    id: UUID,
     ticket_repository: TicketRepository = Depends(ticket_exists),
 ):
-    ticket_repository = TicketRepository()
-    ticket = await ticket_repository.get(ticket_id)
+    ticket = await ticket_repository.get(id)
 
     return TicketResponse.model_validate(ticket)
 
@@ -123,11 +123,11 @@ async def get_completed():
     response_model=TicketResponse,
 )
 async def accept(
-    ticket_id: UUID,
+    id: UUID,
+    accept_ticket_request: AcceptTicketRequest,
     ticket_repository: TicketRepository = Depends(ticket_exists),
 ):
-    ticket_repository = TicketRepository()
-    ticket = await ticket_repository.change_status(ticket_id, TicketStatus.ACCEPTED)
+    ticket = await accept_ticket(id, accept_ticket_request, ticket_repository)
 
     return TicketResponse.model_validate(ticket)
 
@@ -138,11 +138,10 @@ async def accept(
     response_model=TicketResponse,
 )
 async def decline(
-    ticket_id: UUID,
+    id: UUID,
     ticket_repository: TicketRepository = Depends(ticket_exists),
 ):
-    ticket_repository = TicketRepository()
-    ticket = await ticket_repository.change_status(ticket_id, TicketStatus.DECLINED)
+    ticket = await ticket_repository.decline(id)
 
     return TicketResponse.model_validate(ticket)
 
@@ -153,10 +152,10 @@ async def decline(
     response_model=TicketResponse,
 )
 async def complete(
-    ticket_id: UUID,
+    id: UUID,
     completion_image: UploadFile = File(...),
     ticket_repository: TicketRepository = Depends(ticket_exists),
 ):
-    ticket = await complete_ticket(ticket_id, completion_image, ticket_repository)
+    ticket = await complete_ticket(id, completion_image, ticket_repository)
 
     return TicketResponse.model_validate(ticket)

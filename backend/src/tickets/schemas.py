@@ -1,5 +1,5 @@
+import datetime
 import json
-from datetime import datetime
 from enum import Enum
 from typing import List
 from uuid import UUID
@@ -30,6 +30,11 @@ class CreateTicketRequest(BaseModel):
         return value
 
 
+class AcceptTicketRequest(BaseModel):
+    contractor_id: UUID
+    completion_target_date: datetime.date
+
+
 class TicketResponse(BaseModel):
     id: UUID
     latitude: float
@@ -41,7 +46,7 @@ class TicketResponse(BaseModel):
     status: TicketStatus
     image: str
     completion_image: str | None
-    completion_timestamp: datetime | None
+    completion_timestamp: datetime.datetime | None
 
     class Config:
         from_attributes = True
@@ -49,7 +54,7 @@ class TicketResponse(BaseModel):
 
 class TicketCreationResponse(BaseModel):
     id: UUID
-    timestamp: datetime
+    timestamp: datetime.datetime
 
     class Config:
         from_attributes = True
