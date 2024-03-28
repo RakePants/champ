@@ -44,7 +44,8 @@ class TicketResponse(BaseModel):
     volume: int
     status: TicketStatus
     original_image: str
-    completion_image: str
+    processed_image: str
+    completion_image: str | None
     completion_timestamp: datetime.datetime | None
 
     class Config:
