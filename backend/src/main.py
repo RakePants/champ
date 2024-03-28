@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
 from src.tickets.router import tickets_router
-from src.processing.router import processing_router
 
 app = FastAPI()
 
@@ -12,4 +11,3 @@ async def root():
 
 
 app.include_router(tickets_router, prefix="/tickets")
-app.include_router(processing_router, prefix="/processing")

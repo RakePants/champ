@@ -24,6 +24,14 @@ services:
     command: >
       sh -c "alembic upgrade head && 
       uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/backend/uvicorn_logging.conf"
+  processing_service:
+    build: processing_service
+    volumes:
+      - ./processing_service:/usr/src/processing_service
+    ports:
+      - 7779:8000
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/processing_service/uvicorn_logging.conf"
 
 volumes:
   postgres_data:
