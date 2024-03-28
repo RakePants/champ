@@ -19,7 +19,7 @@ class CreateContractorRequest(BaseModel):
 
 class ContractorResponse(BaseModel):
     id: UUID
-    email: EmailStr
+    name: str
 
     class Config:
         from_attributes = True
