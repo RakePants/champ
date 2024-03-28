@@ -4,6 +4,7 @@ import Applications from './pages/Applications';
 import Complete from './pages/Complete';
 import Header from './widgets/Header';
 import {Routes, Route} from 'react-router-dom'
+
 function App() {
   return (
     <>

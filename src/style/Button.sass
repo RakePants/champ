@@ -15,7 +15,41 @@
     cursor: pointer
     font-size: 25px
     font-weight: 500
+    &:hover
+        background: $tertiary
+        color: $primary
     &-accept
         background: $primary
         color: $secondary
+        transition: background 0.5s
+        &:hover
+            color: $secondary
+            background: #00FF00 
+    &-decline
+        color: $font
+        background: $secondary  
+        transition: background 0.5s
+        &:hover
+            color: $secondary
+            background: #f0432c
+    &-complete
+        background-color: transparent
+        border:3px solid #00FF00 
+        margin: 0 auto
+        margin-top: 20px
+        display: block
+        transition: background 0.5s
+        &:hover
+            color: $secondary
+            background: #00FF00 
+    &-active
+        background: transparent
+        font-weight: 600
+        font-size: 24px
+        border: 3px solid $secondary
+        color: $secondary
+        transition: background 0.3s
+
+
+
         
