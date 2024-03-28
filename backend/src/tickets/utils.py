@@ -2,13 +2,14 @@ import base64
 import datetime
 import logging
 import uuid
+import io
 
 import aiohttp
 from fastapi import UploadFile
 
 from src.config import settings
 from src.database.models import Ticket
-from src.database.repositories import TicketRepository, ContractorRepository
+from src.database.repositories import ContractorRepository, TicketRepository
 from src.tickets.schemas import (
     AcceptTicketRequest,
     CreateTicketRequest,
@@ -78,7 +79,7 @@ async def accept_ticket(
     return ticket
 
 
-def get_html(latitude, longitude, address, date, image1, image2):
+def get_html(latitude, longitude, address, date):
     return f"""
 <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
   <div style="margin:50px auto;width:70%;padding:20px 0">
@@ -90,12 +91,7 @@ def get_html(latitude, longitude, address, date, image1, image2):
     <p>Координаты дефекта: ({latitude}, {longitude})</p>
     <p>Адрес: {address}</p>
     <p>Дата, до которой требуется устранить дефект: {date}</p>
-    <p>Фотографии дефекта:</p>
-    <!-- Photos Section -->
-    <div style="display:flex;justify-content:space-around;margin-bottom:20px;">
-      <img src="data:image/jpeg;base64,{image1}" style="width:calc(50% - 4px);height:auto;">
-      <img src="data:image/jpeg;base64,{image2}" style="width:calc(50% - 4px);height:auto;">
-    </div>
+    <p>Фотографии дефекта прикреплены к письму.</p>
     <!-- Button Section -->
     <div style="margin:20px 0;text-align:center;">
       <a href="http://212.60.20.177:7778/docs" style="background: #FFA500;color: #000;padding: 10px 20px;text-decoration: none;border-radius: 4px;">Перейти на сайт</a>
@@ -111,22 +107,33 @@ def get_html(latitude, longitude, address, date, image1, image2):
 
 async def send_email(email: str, ticket: Ticket):
     async with aiohttp.ClientSession() as session:
+        # Prepare the data to be sent
+        data = aiohttp.FormData()
+        data.add_field("from", "Citywatch <noreply@citywatch.ru>")
+        data.add_field("to", email)  # Assuming 'email' is a string
+        data.add_field("subject", "Новая заявка на устранение дефекта")
+        data.add_field(
+            "html",
+            get_html(
+                latitude=ticket.latitude,
+                longitude=ticket.longitude,
+                address=ticket.address,
+                date=ticket.completion_target_date,
+            ),
+        )
+        # Add files
+        data.add_field(
+            "attachment", io.BytesIO(base64.b64decode(ticket.original_image)), filename="original_image.jpg"
+        )
+        data.add_field(
+            "attachment", io.BytesIO(base64.b64decode(ticket.processed_image)), filename="processed_image.jpg"
+        )
+
+        # Make the POST request
         async with session.post(
-            url="https://api.mailgun.net/v3/auth.papper.tech" "/messages",
+            url="https://api.mailgun.net/v3/auth.papper.tech/messages",
             auth=aiohttp.BasicAuth("api", settings.mailgun_api_key),
-            data={
-                "from": "Citywatch <noreply@citywatch.ru>",
-                "to": [email],
-                "subject": "Новая заявка на устранение дефекта",
-                "text": "Вам поступила новая заявка на устранение дефекта.",
-                "html": get_html(
-                    latitude=ticket.latitude,
-                    longitude=ticket.longitude,
-                    address=ticket.address,
-                    date=ticket.completion_target_date,
-                    image1=ticket.processed_image,
-                    image2=ticket.completion_image,
-                ),
-            },
+            data=data,
         ) as response:
+            # Log the response
             logging.info(await response.text())
