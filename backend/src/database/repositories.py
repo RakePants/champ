@@ -3,7 +3,9 @@ from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
+from fastapi.exceptions import HTTPException
 from sqlalchemy import pool, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.config import settings
@@ -91,7 +93,7 @@ class TicketRepository(AbstractRepository):
                 ticket.completion_image = None
                 ticket.completion_timestamp = None
                 return ticket
-    
+
     async def make_new(self, id: UUID):
         async with self.session as session:
             async with session.begin():
@@ -130,8 +132,13 @@ class ContractorRepository(AbstractRepository):
 
     async def add(self, entity):
         async with self.session as session:
-            async with session.begin():
-                session.add(entity)
+            try:
+                async with session.begin():
+                    session.add(entity)
+            except IntegrityError:
+                raise HTTPException(
+                    status_code=400, detail="Contractor already exists"
+                )
 
     async def get(self, id: UUID) -> models.Contractor | None:
         async with self.session as session:
@@ -147,14 +154,22 @@ class ContractorRepository(AbstractRepository):
     async def get_due_contractor_tickets(self, id: UUID) -> List[models.Ticket] | None:
         async with self.session as session:
             tickets = await session.execute(
-                select(models.Ticket).where(models.Ticket.contractor_id == id, models.Ticket.status == TicketStatus.ACCEPTED)
+                select(models.Ticket).where(
+                    models.Ticket.contractor_id == id,
+                    models.Ticket.status == TicketStatus.ACCEPTED,
+                )
             )
             return tickets.scalars().all()
-        
-    async def get_completed_contractor_tickets(self, id: UUID) -> List[models.Ticket] | None:
+
+    async def get_completed_contractor_tickets(
+        self, id: UUID
+    ) -> List[models.Ticket] | None:
         async with self.session as session:
             tickets = await session.execute(
-                select(models.Ticket).where(models.Ticket.contractor_id == id, models.Ticket.status == TicketStatus.COMPLETED)
+                select(models.Ticket).where(
+                    models.Ticket.contractor_id == id,
+                    models.Ticket.status == TicketStatus.COMPLETED,
+                )
             )
             return tickets.scalars().all()
 
