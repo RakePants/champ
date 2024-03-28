@@ -40,6 +40,7 @@ class TicketResponse(BaseModel):
     longitude: float
     address: str
     description: str
+    timestamp: datetime.datetime
     type: str
     volume: int
     status: TicketStatus
