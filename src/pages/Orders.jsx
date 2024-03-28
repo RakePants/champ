@@ -7,25 +7,22 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setData} from "../store/reducers/newDataReducer";
 import { getAccept } from "../API/requests";
-
+import { useNavigate, useParams } from "react-router-dom";
 //import Error from "../widgets/Error";
 export default function Orders() {
-    const [isError, setIsError] = React.useState(false);
+    const navigate = useNavigate();
+    const { id } = useParams();
     const dispatch = useDispatch();
     useEffect(() => {
-        try{
-            async function fetchData() {
-                const data = await getAccept();
-                dispatch(setData(data));
-            }
-            fetchData();
+        async function fetchData() {
+            const data = await getAccept();
+            dispatch(setData(data));
+            if(data.length === 0) {navigate('/orders/0')}
+            else navigate(`/orders/${data[0].id}`);
         }
-        catch(error) {
-            setIsError(true);
-        }
-
+        fetchData();
     }, [dispatch]);
-    
+
     return(
         <>
             <section style={{display: 'flex', minHeight: '100%'}}>

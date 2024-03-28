@@ -6,10 +6,11 @@ import Navbar from "../widgets/Navbar";
 import Main from "../widgets/Main";
 import { getComplete } from "../API/requests";
 import Error from "../widgets/Error";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Complete() {
     const [isError, setIsError] = React.useState(false);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
         try{
@@ -18,6 +19,7 @@ export default function Complete() {
                 dispatch(setData(data));
             }
             fetchData();
+
         }
         catch(error) {
             setIsError(true);

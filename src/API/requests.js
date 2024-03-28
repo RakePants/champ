@@ -32,3 +32,11 @@ export async function getAll() {
 export async function getById() {
     return await updateTicketStatus('get_by_id');
 }
+
+export async function getContractor() {
+    const response = await axiosInstance.get('/contractors/get_all')
+    .catch(err => {
+        console.log(err);
+    })
+    return response.data
+}

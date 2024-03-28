@@ -2,22 +2,35 @@ import React from "react";
 import Button from "../shared/Button";
 import '../style/Header.sass';
 import { useNavigate } from "react-router-dom";
-
+import { getContractor } from "../API/requests";
+import { useDispatch } from "react-redux";
+import { setContractors } from "../store/reducers/newContractorReducer";
 
 export default function Header() {
     const navigate = useNavigate();
-    const [isActive, setActive] = React.useState(1);
+    const dispatch = useDispatch();
+    const [isActive, setActive] = React.useState(0);
+
+    React.useEffect(() => {
+        async function fetchData() {
+            const data = await getContractor();
+            console.log(data);
+            dispatch(setContractors(data));
+        }
+        fetchData();
+    }, [])
+
     function handleClick(index, to) {
         setActive(index);
         navigate(to);
     }
-    const navigation = [{route: '/apps', name: 'Заявки'}, {route: '/orders', name: 'В процессе'}, {route: '/complete', name: 'Выполнено'},];
+    const navigation = [{route: '/apps/0', name: 'Заявки'}, {route: '/orders/0', name: 'В процессе'}, {route: '/complete', name: 'Выполнено'},];
     return (
         <header>
-            <img onClick={() => {handleClick(0, '/apps')}} className="logo" src="./img/MainLogo.png" alt="Logo" />
+            <img onClick={() => {handleClick(0, '/apps/0')}} className="logo" src="/img/MainLogo.png" alt="Logo" />
             <div className="header__menu">
                 {navigation.map((item, index) => (
-                    <Button key={index} className={isActive === index ? 'button-active' : ''} onClick={() => {handleClick(index, item.route)}}>{item.name}</Button>
+                    <Button title={"Открыть " + item.name} key={index} className={isActive === index ? 'button-active' : ''} onClick={() => {handleClick(index, item.route)}}>{item.name}</Button>
                 ))}
             </div>
 
