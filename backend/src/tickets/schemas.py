@@ -47,6 +47,9 @@ class TicketResponse(BaseModel):
     processed_image: str
     completion_image: str | None
     completion_timestamp: datetime.datetime | None
+    contractor_id: UUID | None
+    completion_target_date: datetime.date | None
+
 
     class Config:
         from_attributes = True

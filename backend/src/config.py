@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     db_name: str
     db_user: str
     db_password: str
+    mailgun_api_key: str
 
     @property
     def database_url(self) -> str:
