@@ -32,7 +32,7 @@ class Ticket(Base):
     description: Mapped[str] = Column(String(255))
     timestamp: Mapped[DateTime] = Column(DateTime, default=datetime.datetime.now)
     type: Mapped[str] = Column(String(255))
-    volume: Mapped[int] = Column(Integer)
+    volume: Mapped[float] = Column(Float)
     status: Mapped[str] = Column(String(64))
     original_image: Mapped[str] = Column(Text)  # Base64 image data
     processed_image: Mapped[str] = Column(Text)  # Base64 image data

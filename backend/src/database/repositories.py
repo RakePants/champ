@@ -88,6 +88,19 @@ class TicketRepository(AbstractRepository):
                 ticket.status = TicketStatus.DECLINED
                 ticket.contractor_id = None
                 ticket.completion_target_date = None
+                ticket.completion_image = None
+                ticket.completion_timestamp = None
+                return ticket
+    
+    async def make_new(self, id: UUID):
+        async with self.session as session:
+            async with session.begin():
+                ticket = await session.get(models.Ticket, id)
+                ticket.status = TicketStatus.NEW
+                ticket.contractor_id = None
+                ticket.completion_target_date = None
+                ticket.completion_image = None
+                ticket.completion_timestamp = None
                 return ticket
 
     async def complete(self, id: UUID, image_bytes: str, timestamp: datetime.datetime):

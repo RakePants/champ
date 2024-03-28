@@ -19,7 +19,7 @@ class CreateTicketRequest(BaseModel):
     address: str
     description: str
     type: str
-    volume: int
+    volume: float
 
     @model_validator(mode="before")
     @classmethod
@@ -42,7 +42,7 @@ class TicketResponse(BaseModel):
     description: str
     timestamp: datetime.datetime
     type: str
-    volume: int
+    volume: float
     status: TicketStatus
     original_image: str
     processed_image: str

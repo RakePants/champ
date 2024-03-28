@@ -118,6 +118,20 @@ async def get_completed():
 
 
 @tickets_router.put(
+    "/make_new",
+    status_code=status.HTTP_200_OK,
+    response_model=TicketResponse,
+)
+async def make_new(
+    id: UUID,
+    ticket_repository: TicketRepository = Depends(ticket_exists),
+):
+    ticket = await ticket_repository.make_new(id)
+
+    return TicketResponse.model_validate(ticket)
+
+
+@tickets_router.put(
     "/accept",
     status_code=status.HTTP_200_OK,
     response_model=TicketResponse,
