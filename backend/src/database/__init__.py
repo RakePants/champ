@@ -1,1 +1,1 @@
-from src.database.models import Base, Ticket
+from src.database.models import Base, Ticket, Contractor

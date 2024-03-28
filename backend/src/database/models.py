@@ -3,7 +3,7 @@ import uuid
 
 from sqlalchemy import Column, DateTime, Date, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped
 
 
 class Base(DeclarativeBase):
@@ -34,7 +34,8 @@ class Ticket(Base):
     type: Mapped[str] = Column(String(255))
     volume: Mapped[int] = Column(Integer)
     status: Mapped[str] = Column(String(64))
-    image: Mapped[str] = Column(Text)  # Base64 image data
+    original_image: Mapped[str] = Column(Text)  # Base64 image data
+    processed_image: Mapped[str] = Column(Text)  # Base64 image data
 
     contractor_id: Mapped[uuid.UUID | None] = Column(
         UUID(as_uuid=True), ForeignKey("contractors.id"), nullable=True

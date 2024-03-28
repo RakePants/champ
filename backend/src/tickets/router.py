@@ -28,9 +28,9 @@ tickets_router = APIRouter(tags=["Tickets"])
 )
 async def create(
     create_ticket_request: CreateTicketRequest = Body(...),
-    image: UploadFile = File(...),
+    images: List[UploadFile] = File(...),
 ):
-    ticket = await add_ticket(create_ticket_request, image, TicketRepository())
+    ticket = await add_ticket(create_ticket_request, images, TicketRepository())
 
     return TicketCreationResponse.model_validate(ticket)
 

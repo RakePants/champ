@@ -10,10 +10,13 @@ from src.tickets.schemas import CreateTicketRequest, TicketStatus, AcceptTicketR
 
 async def add_ticket(
     create_ticket_request: CreateTicketRequest,
-    image: UploadFile,
+    images: UploadFile,
     ticket_repository: TicketRepository,
 ) -> Ticket:
     id = uuid.uuid4()  # Generate random unique identifier
+
+    original_image = images[0]
+    processed_image = images[1]
 
     ticket = Ticket(
         id=id,
@@ -24,7 +27,8 @@ async def add_ticket(
         type=create_ticket_request.type,
         volume=create_ticket_request.volume,
         status=TicketStatus.NEW,
-        image=base64.b64encode(image.file.read()).decode("ascii"),
+        original_image=base64.b64encode(original_image.file.read()).decode("ascii"),
+        processed_image=base64.b64encode(processed_image.file.read()).decode("ascii"),
         completion_image=None,
         completion_timestamp=None,
         contractor_id=None,

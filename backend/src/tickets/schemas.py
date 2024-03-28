@@ -1,7 +1,6 @@
 import datetime
 import json
 from enum import Enum
-from typing import List
 from uuid import UUID
 
 from pydantic import BaseModel, model_validator
@@ -44,8 +43,8 @@ class TicketResponse(BaseModel):
     type: str
     volume: int
     status: TicketStatus
-    image: str
-    completion_image: str | None
+    original_image: str
+    completion_image: str
     completion_timestamp: datetime.datetime | None
 
     class Config:
