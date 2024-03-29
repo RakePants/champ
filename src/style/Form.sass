@@ -1,0 +1,39 @@
+@import './Variables.sass'
+
+.form-container
+    width: 100%
+    .form__buttons
+        width: 100%
+        display: flex
+        justify-content: space-evenly
+        margin-top: 20px
+    #demo-simple-select
+        &:hover
+            border-color: $primary
+    .MuiFormLabel-root
+        color: $primary
+        &:hover
+            border-color: none
+    .MuiOutlinedInput
+        border: 2px solid $primary
+        &:hover
+            border-color: none
+    .MuiOutlinedInput-notchedOutline
+        border: 2px solid $primary
+        &:hover
+            border-color: $primary
+    .MuiInputBase-root
+        border-radius: 25px
+        color: white
+        background-color: $secondary
+    
+    .MuiSelect-outlined
+        border-color: $tertiary
+        &:hover
+            border: none
+    .MuiInputBase-root.Mui-focused
+        color: white
+        border: none
+        outline: none
+        &:hover
+            border: none

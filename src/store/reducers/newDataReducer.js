@@ -8,17 +8,8 @@ export const newDataReducer = createSlice({
     name: 'data',
     initialState: initState,
     reducers: {
-        setNewData: (state, action) => {
-            state.newData = action.payload
-        },
-        setAcceptData: (state, action) => {
-            state.acceptData = action.payload
-        },
-        setDeclinedData: (state, action) => {
-            state.declinedData = action.payload    
-        },
-        setCompletedData: (state, action) => {
-            state.completedData = action.payload
+        removeItem: (state, action) => {
+            state.data = state.data.filter(item => item.id !== action.payload)
         },
         setData: (state, action) => {
             state.data = action.payload
@@ -27,5 +18,5 @@ export const newDataReducer = createSlice({
     }
 })
 
-export const {setNewData, setData} = newDataReducer.actions;
+export const {removeItem, setData} = newDataReducer.actions;
 export default newDataReducer.reducer;

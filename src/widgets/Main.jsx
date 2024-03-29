@@ -7,17 +7,18 @@ import NotFound from "../widgets/404";
 import { useParams } from "react-router-dom";
 import InfoSkeleton from "../entities/InfoSkeleton";
 
-function Main({children, title, index}) {
+function Main({children, isComplete}) {
     const { id } = useParams();
     console.log(id)
     const data = useSelector(state => state.data.data);
+    const title = useSelector(state => state.title.title);
     const activeItem = data.find(item => item.id === id);
-    if(+id === 0){
+    if(+id === 0 || activeItem === undefined) {
         return (
             <InfoSkeleton></InfoSkeleton>
         )
     }
-    if(data.length === 0 || activeItem === undefined) {
+    if(data.length !== 0 && activeItem === undefined) {
         return <NotFound text={'Информация о дефекте не найдена'}></NotFound>
     }
 
@@ -26,7 +27,7 @@ function Main({children, title, index}) {
         <div className="main">
             <Container >
                 <div className="main__title">{title}</div>
-                <Info data={activeItem}></Info>
+                <Info isComplete={isComplete} data={activeItem}></Info>
                 {children}
             </Container>
         </div>

@@ -1,7 +1,7 @@
 import axiosInstance from ".";
 
 async function updateTicketStatus(status, id) {
-    const response = await axiosInstance.put(`/tickets/${status}`, { id })
+    const response = await axiosInstance.put(`/tickets/${status}?id=${id}`)
     .catch(err => {
         console.log(err);
     });
@@ -22,6 +22,11 @@ export async function decline(id) {
     return updateTicketStatus('decline', id);
 }
 
-export async function complete(id) {
-    return updateTicketStatus('complete', id);
+export async function complete(id, completion_image) {
+    const response = await axiosInstance.put(`/tickets/complete`,completion_image, { params:{id} })
+    .catch(err => {
+        console.log(err);
+    });
+
+    return response.data;
 }
