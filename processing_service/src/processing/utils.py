@@ -8,5 +8,9 @@ def process_image(image_file: File) -> File:
 
 
 def process_speech_to_text(audio_file: File) -> str:
-    result = pipe(audio_file)
+    with open(audio_file, "rb") as opened_audio_file:
+        # Read the entire file's contents into a bytes object
+        audio_bytes = opened_audio_file.read()
+
+    result = pipe(audio_bytes)
     return result["text"]
