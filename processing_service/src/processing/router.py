@@ -9,9 +9,9 @@ processing_router = APIRouter(tags=["Processing"])
 def image(
     image: UploadFile = File(...),
 ):
-    image = image.file
-    image = process_image(image)
-    return image
+    image_file = image.file
+    result = process_image(image_file)
+    return result
 
 
 @processing_router.post("/speech_to_text", status_code=status.HTTP_200_OK)
