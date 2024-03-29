@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">CityWatch</string>
+    <string name="no_order_yet">"Пока нет поручений"</string>
+    <string name="creating_order">Создание поручения</string>
+    <string name="create">Создать</string>
+    <string name="address">Адрес</string>
+    <string name="volume_of_peet">Глубина ямы</string>
+    <string name="description">Описание</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
+    <string name="type">Тип</string>
+    <string name="volume">Глубина</string>
+    <string name="take_photo">Сделать фото</string>
+</resources>
