@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setData} from "../store/reducers/newDataReducer";
 import Navbar from "../widgets/Navbar";
 import Main from "../widgets/Main";
+import { setMutex } from "../store/reducers/newMutexReducer";
 import { getComplete } from "../API/requests";
 import { useNavigate, useParams } from "react-router-dom";
 import hashToNumber from "../utils/hashToNumber";
@@ -13,9 +14,10 @@ export default function Complete() {
     const navigate = useNavigate();
     const { id } = useParams();
     const dispatch = useDispatch();
-    const newData = useSelector(state => state.data.data);
+    const mutex = useSelector(state => state.data.mutex);
     useEffect(() => {
         async function fetchData() {
+            dispatch(setMutex(true));
             const data = await getComplete();
             dispatch(setData(data));
             if(data.length === 0) {navigate('/complete/0')}
@@ -23,6 +25,7 @@ export default function Complete() {
                 navigate(`/complete/${data[0].id}`); 
                 dispatch(setTitle('Выполнено #' + hashToNumber(data[0].id))) 
             }
+            dispatch(setMutex(false));
         }
         fetchData();
         // eslint-disable-next-line

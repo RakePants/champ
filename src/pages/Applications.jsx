@@ -9,7 +9,7 @@ import { getNew } from "../API/requests";
 import Form from "../widgets/Form";
 import { useNavigate, useParams } from "react-router-dom";
 import hashToNumber from "../utils/hashToNumber";
-
+import { setMutex } from "../store/reducers/newMutexReducer";
 
 export default function Applications() {
     const navigate = useNavigate();
@@ -17,10 +17,13 @@ export default function Applications() {
     const dispatch = useDispatch();
     useEffect(() => {
         async function fetchData() {
+            dispatch(setMutex(true));
             const data = await getNew();
             dispatch(setData(data));
             if (data.length === 0) { navigate('/apps/404') }
             else if(id === '0') {navigate(`/apps/${data[0].id}`); dispatch(setTitle('Заявка #' + hashToNumber(data[0].id))) }
+            dispatch(setMutex(false));
+
         }
         fetchData();
         // eslint-disable-next-line

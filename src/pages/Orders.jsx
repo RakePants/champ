@@ -5,7 +5,7 @@ import Main from "../widgets/Main";
 import Button from "../shared/Button";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setData} from "../store/reducers/newDataReducer";
+import { setData } from "../store/reducers/newDataReducer";
 import { getAccept } from "../API/requests";
 import { useNavigate, useParams } from "react-router-dom";
 import hashToNumber from "../utils/hashToNumber";
@@ -13,6 +13,8 @@ import { setTitle } from "../store/reducers/newInfoReducer";
 import Input from "../shared/Input";
 import { accept, complete } from "../API/send";
 import { removeItem } from "../store/reducers/newDataReducer";
+import { setMutex } from "../store/reducers/newMutexReducer";
+
 
 //import Error from "../widgets/Error";
 export default function Orders() {
@@ -23,10 +25,12 @@ export default function Orders() {
     const newData = useSelector(state => state.data.data);
     useEffect(() => {
         async function fetchData() {
+            dispatch(setMutex(true));
             const data = await getAccept();
             dispatch(setData(data));
-            if(data.length === 0) {navigate('/orders/0')}
-            else if(id === '0') {navigate(`/orders/${data[0].id}`); dispatch(setTitle('В процессе #' + hashToNumber(data[0].id))) }
+            if (data.length === 0) { navigate('/orders/0') }
+            else if (id === '0') { navigate(`/orders/${data[0].id}`); dispatch(setTitle('В процессе #' + hashToNumber(data[0].id))) }
+            dispatch(setMutex(false));
         }
         fetchData();
         // eslint-disable-next-line
@@ -40,7 +44,7 @@ export default function Orders() {
         root.scrollIntoView({ behavior: 'smooth' });
     }
     function handleComplete() {
-        
+
         const formData = new FormData();
         formData.append('completion_image', image);
         complete(id, formData);
@@ -49,13 +53,15 @@ export default function Orders() {
     useEffect(() => {
         console.log(image)
     }, [image])
-    return(
+    return (
         <>
-            <section style={{display: 'flex', minHeight: '100%'}}>
+            <section style={{ display: 'flex', minHeight: '100%' }}>
                 <Navbar></Navbar>
                 <Main title={'Заказ №123'} index={0}>
-                    <Button disabled={image === undefined} onClick={handleComplete} className={'button-complete'}>Выполнено</Button>
-                    <Input image={image} setImage={setImage}></Input>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <Button disabled={image === undefined} onClick={handleComplete} className={'button-complete'}>Выполнено</Button>
+                        <Input image={image} setImage={setImage}></Input>
+                    </div>
                 </Main>
             </section>
 

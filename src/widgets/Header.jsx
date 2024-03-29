@@ -3,13 +3,14 @@ import Button from "../shared/Button";
 import '../style/Header.sass';
 import { useNavigate } from "react-router-dom";
 import { getContractor } from "../API/requests";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setContractors } from "../store/reducers/newContractorReducer";
 
 export default function Header() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isActive, setActive] = React.useState(0);
+    const mutex = useSelector(state => state.data.mutex);
 
     React.useEffect(() => {
         async function fetchData() {
@@ -22,6 +23,7 @@ export default function Header() {
     }, [])
 
     function handleClick(index, to) {
+        if(mutex === true) {return}
         setActive(index);
         navigate(to);
     }

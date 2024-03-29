@@ -35,9 +35,9 @@ function List(){
     if(+id === 0){
         return(
             <>
-                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto' }} />
-                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto' }} />
-                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto', height: '60px' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto', height: '60px' }} />
+                <Skeleton variant="text" sx={{ fontSize: '1rem', bgcolor: 'grey.700', width: '90%', margin: 'auto', height: '60px' }} />
             </>
         )
     }

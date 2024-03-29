@@ -11,20 +11,19 @@ export default function InfoSkeleton() {
         <div className="main">
             <Container >
                 <div className="main__title">
-                    <Skeleton variant="text" width={`100%`} sx={{ fontSize: '1.5rem', bgcolor: 'grey.700' }} />
+                    <Skeleton variant="text" width={`30%`} sx={{ fontSize: '1.5rem', bgcolor: 'grey.700'}} />
                 </div>
                 <div className='info'>
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={4}>
                             <Grid xs={12} md={6}>
-                                <Skeleton variant="rounded" width={'100%'} height={468} sx={{ bgcolor: 'grey.700' }} />
+                                <div>
+                                    <Skeleton variant="rounded" width={'100%'} height={468} sx={{ bgcolor: 'grey.700' }} />
+                                </div>
                             </Grid>
                             <Grid xs={12} md={6}>
-                                <div className="info__container">
-                                    <Skeleton variant="text" width={`100%`} sx={{ fontSize: '1rem', bgcolor: 'grey.700' }} />
-                                    <Skeleton variant="text" width={`100%`} sx={{ fontSize: '1rem', bgcolor: 'grey.700' }} />
-                                    <Skeleton variant="text" width={`100%`} sx={{ fontSize: '1rem', bgcolor: 'grey.700' }} />
-                                    <Skeleton variant="text" width={`100%`} sx={{ fontSize: '1rem', bgcolor: 'grey.700' }} />
+                                <div>
+                                <Skeleton variant="rounded" width={'100%'} height={468} sx={{ bgcolor: 'grey.700' }} />
                                 </div>
                             </Grid>
                             <Grid xs={12}>
