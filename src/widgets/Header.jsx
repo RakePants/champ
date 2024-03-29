@@ -10,12 +10,11 @@ export default function Header() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isActive, setActive] = React.useState(0);
-    const mutex = useSelector(state => state.data.mutex);
+    const mutex = useSelector(state => state.mutex.mutex);
 
     React.useEffect(() => {
         async function fetchData() {
             const data = await getContractor();
-            console.log(data);
             dispatch(setContractors(data));
         }
         fetchData();
@@ -23,9 +22,11 @@ export default function Header() {
     }, [])
 
     function handleClick(index, to) {
-        if(mutex === true) {return}
-        setActive(index);
-        navigate(to);
+        console.log(mutex);
+        if(mutex) {
+            setActive(index);
+            navigate(to);
+        }
     }
     const navigation = [{route: '/apps/0', name: 'Заявки'}, {route: '/orders/0', name: 'В процессе'}, {route: '/complete/0', name: 'Выполнено'},];
     return (

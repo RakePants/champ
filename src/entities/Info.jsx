@@ -4,8 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Paper from '@mui/material/Paper';
 import '../style/Info.sass';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
-import { useLocation } from "react-router-dom";
-import { complete } from '../API/send';
 import { dateToString } from '../utils/dateToString';
 import { useSelector } from 'react-redux';
 
@@ -24,9 +22,11 @@ export default function Info({ data, isComplete }) {
                         <div className='info__image' >{isComplete === true ? "После:" : "Обработка"}</div>
                         <img src={"data:image/png;base64," + (isComplete === true ? data.completion_image : data.processed_image) || data.processed_image} alt="" />
                     </Grid>
+                    <Grid xs={12}>
+                        <div className="info__title">Информация о дефекте</div>
+                    </Grid>
                     <Grid xs={12} md={6}>
                         <div className="info__container">
-                            <div className="info__title">Информация о дефекте</div>
                             <div className="info__item"><span>Вид дефекта: </span>{data.type}</div>
                             <div className="info__item"><span>Дата: </span>{dateToString(new Date(data.timestamp))}</div>
                             <div className="info__item"><span>Объём ямы: </span>{data.volume}</div>
@@ -46,6 +46,7 @@ export default function Info({ data, isComplete }) {
                     </Grid>
 
                     <Grid xs={12}>
+                        <div style={{ marginBottom: '20px', textAlign: 'center' }} className="info__item"><span>Комментарий</span></div>
                         <Paper elevation={0} >
                             {data.description}
                         </Paper>
@@ -53,7 +54,7 @@ export default function Info({ data, isComplete }) {
                     <Grid xs={12}>
                         <YMaps >
                             <Map height='500px' width='100%' defaultState={{ center: [data.latitude, data.longitude], zoom: 5 }}>
-                            <Placemark geometry={[data.latitude, data.longitude]} />
+                                <Placemark geometry={[data.latitude, data.longitude]} />
                             </Map>
                         </YMaps>
                     </Grid>

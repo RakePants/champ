@@ -25,12 +25,13 @@ export default function Orders() {
     const newData = useSelector(state => state.data.data);
     useEffect(() => {
         async function fetchData() {
-            dispatch(setMutex(true));
+            dispatch(setMutex(false));
+
             const data = await getAccept();
             dispatch(setData(data));
             if (data.length === 0) { navigate('/orders/0') }
             else if (id === '0') { navigate(`/orders/${data[0].id}`); dispatch(setTitle('В процессе #' + hashToNumber(data[0].id))) }
-            dispatch(setMutex(false));
+            dispatch(setMutex(true));
         }
         fetchData();
         // eslint-disable-next-line
@@ -58,7 +59,7 @@ export default function Orders() {
             <section style={{ display: 'flex', minHeight: '100%' }}>
                 <Navbar></Navbar>
                 <Main title={'Заказ №123'} index={0}>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', alignItems: 'center' }}>
                         <Button disabled={image === undefined} onClick={handleComplete} className={'button-complete'}>Выполнено</Button>
                         <Input image={image} setImage={setImage}></Input>
                     </div>

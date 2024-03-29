@@ -13,8 +13,6 @@ function List(){
     const dispatch = useDispatch();
     const data = useSelector(state => state.data.data);
     const activeId = data.findIndex(item => item.id === id);
-    console.log(data)
-    
     const path = pathname.split('/')[1];
     switch (path) {
         case 'apps': {

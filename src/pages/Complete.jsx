@@ -17,7 +17,7 @@ export default function Complete() {
     const mutex = useSelector(state => state.data.mutex);
     useEffect(() => {
         async function fetchData() {
-            dispatch(setMutex(true));
+            dispatch(setMutex(false));
             const data = await getComplete();
             dispatch(setData(data));
             if(data.length === 0) {navigate('/complete/0')}
@@ -25,7 +25,8 @@ export default function Complete() {
                 navigate(`/complete/${data[0].id}`); 
                 dispatch(setTitle('Выполнено #' + hashToNumber(data[0].id))) 
             }
-            dispatch(setMutex(false));
+            dispatch(setMutex(true));
+
         }
         fetchData();
         // eslint-disable-next-line

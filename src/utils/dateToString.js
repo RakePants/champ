@@ -9,5 +9,5 @@ export function dateToString(date) {
     var yy = date.getFullYear() % 100;
     if (yy < 10) yy = '0' + yy;
   
-    return dd + '.' + mm + '.' + yy;
+    return dd + '-' + mm + '-' + yy;
 }

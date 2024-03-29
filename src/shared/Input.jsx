@@ -44,10 +44,11 @@ const Input = ({image, setImage}) => {
         <div
             onDrop={onDrop}
             onDragOver={(event) => event.preventDefault()}
+            onClick={onInputClick}
             style={{
                 border: '2px solid #FFA500',
                 width: '400px',
-                minHeight: '200px',
+                minHeight: '80px',
                 margin: '0 auto',
                 backgroundColor: '#232323',
                 color: '#fff',

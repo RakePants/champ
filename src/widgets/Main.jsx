@@ -9,7 +9,6 @@ import InfoSkeleton from "../entities/InfoSkeleton";
 
 function Main({children, isComplete}) {
     const { id } = useParams();
-    console.log(id)
     const data = useSelector(state => state.data.data);
     const title = useSelector(state => state.title.title);
     const activeItem = data.find(item => item.id === id);
