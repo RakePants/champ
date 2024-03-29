@@ -8,4 +8,11 @@ services:
     ports:
       - 7779:8000
     command: >
-      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/processing_service/uvicorn_logging.conf"
+      sh -c "uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload --log-config /usr/src/processing_service/uvicorn_logging.conf"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
